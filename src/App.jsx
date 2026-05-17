@@ -21,30 +21,33 @@ const EVENTS = [
     name: "Maximum Deadlift",
     shortName: "Deadlift",
     fields: [
-      { key: "value_1", label: "Attempt 1, lb", placeholder: "300", inputMode: "numeric" },
-      { key: "value_2", label: "Attempt 2, lb", placeholder: "320", inputMode: "numeric" },
+      { key: "value_1", label: "Attempt 1, lb", placeholder: "e.g. 300", inputMode: "numeric" },
+      { key: "value_2", label: "Attempt 2, lb", placeholder: "e.g. 320", inputMode: "numeric" },
     ],
   },
   {
     key: "HRP",
     name: "Hand-Release Push-Up",
-    fields: [{ key: "value_1", label: "Repetitions", placeholder: "42", inputMode: "numeric" }],
+    shortName: "Hand Release Push Up"
+    fields: [{ key: "value_1", label: "Repetitions", placeholder: "e.g. 45", inputMode: "numeric" }],
   },
   {
     key: "SDC",
     name: "Sprint-Drag-Carry",
-    fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "215", inputMode: "numeric" }],
+    shortName: "Sprint-Drag-Carry"
+    fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "e.g. 130", inputMode: "numeric" }],
   },
   {
     key: "PLK",
     name: "Plank",
     shortName: "Plank",
-    fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "322", inputMode: "numeric" }],
+    fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "e.g. 340", inputMode: "numeric" }],
   },
   {
     key: "2MR",
     name: "Two-Mile Run",
-    fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "1732", inputMode: "numeric" }],
+    shortName: "Two-Mile Run"
+    fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "e.g. 1430", inputMode: "numeric" }],
   },
 ];
 
@@ -895,8 +898,8 @@ export default function App() {
         {mode === "grader" ? (
           <main style={styles.stack}>
             <section style={styles.card}>
-              <label style={styles.label}>Grader initials</label>
-              <input style={styles.bigInput} value={graderInitials} onChange={(e) => setGraderInitials(sanitizeInitials(e.target.value))} placeholder="EL" maxLength={4} autoCapitalize="characters" />
+              <label style={styles.label}>Grader Initials</label>
+              <input style={styles.bigInput} value={graderInitials} onChange={(e) => setGraderInitials(sanitizeInitials(e.target.value))} placeholder="e.g. DK" maxLength={4} autoCapitalize="characters" />
             </section>
 
             <section style={styles.card}>
