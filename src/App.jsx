@@ -883,9 +883,9 @@ export default function App() {
       <div style={styles.shell}>
         <header style={styles.header}>
           <div>
-            <p style={styles.eyebrow}>Welcome!</p>
-            <h1 style={styles.title}>Basic Leader Course AFT Scoring Automation</h1>
-            <p style={styles.subtitle}>Real-time field data entry and Excel-export for AFT administration.</p>
+            <p style={styles.eyebrow}>WELCOME!</p>
+            <h1 style={styles.title}>BLC AFT SCORING AUTOMATION SYSTEM</h1>
+            <p style={styles.subtitle}>Please enter your grader initial, student RN, and records for each subject.</p>
           </div>
           <div style={supabase ? styles.onlineBadge : styles.offlineBadge}>{supabase ? "SUPABASE READY" : "ENV NOT SET"}</div>
         </header>
