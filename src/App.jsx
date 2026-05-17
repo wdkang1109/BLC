@@ -883,9 +883,9 @@ export default function App() {
       <div style={styles.shell}>
         <header style={styles.header}>
           <div>
-            <p style={styles.eyebrow}>AFT SCORING AUTOMATION</p>
-            <h1 style={styles.title}>Shared multi-grader field app</h1>
-            <p style={styles.subtitle}>Phone-first grader entry with one central Supabase database.</p>
+            <p style={styles.eyebrow}>BY EXAMPLE!</p>
+            <h1 style={styles.title}>BLC AFT SCORING AUTOMATION SYSTEM</h1>
+            <p style={styles.subtitle}>Attention, graders: Please enter your grader initial, student RN, and recorded values.</p>
           </div>
           <div style={supabase ? styles.onlineBadge : styles.offlineBadge}>{supabase ? "SUPABASE READY" : "ENV NOT SET"}</div>
         </header>
@@ -898,8 +898,8 @@ export default function App() {
         {mode === "grader" ? (
           <main style={styles.stack}>
             <section style={styles.card}>
-              <label style={styles.label}>Grader initials</label>
-              <input style={styles.bigInput} value={graderInitials} onChange={(e) => setGraderInitials(sanitizeInitials(e.target.value))} placeholder="EL" maxLength={4} autoCapitalize="characters" />
+              <label style={styles.label}>Grader Initials</label>
+              <input style={styles.bigInput} value={graderInitials} onChange={(e) => setGraderInitials(sanitizeInitials(e.target.value))} placeholder="e.g. DK" maxLength={4} autoCapitalize="characters" />
             </section>
 
             <section style={styles.card}>
