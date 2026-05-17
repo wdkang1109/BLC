@@ -28,13 +28,11 @@ const EVENTS = [
   {
     key: "HRP",
     name: "Hand-Release Push-Up",
-    shortName: "Push-up",
     fields: [{ key: "value_1", label: "Repetitions", placeholder: "42", inputMode: "numeric" }],
   },
   {
     key: "SDC",
     name: "Sprint-Drag-Carry",
-    shortName: "SDC",
     fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "215", inputMode: "numeric" }],
   },
   {
@@ -46,7 +44,6 @@ const EVENTS = [
   {
     key: "2MR",
     name: "Two-Mile Run",
-    shortName: "2MR",
     fields: [{ key: "value_1", label: "Time, MMSS", placeholder: "1732", inputMode: "numeric" }],
   },
 ];
@@ -551,11 +548,11 @@ function runSelfTests() {
   const combined = buildCombinedRows(
     [toRosterRow({ RN: "101", RANK: "PFC", NAME: "TEST", SEX: "M", MOS: "92Y", MSC: "8A", AGE: "24", YYYYMMDD: "20260517" })],
     [
-      { rn: "101", event_key: "MDL", value_1: "300", value_2: "320", grader_initials: "EL" },
-      { rn: "101", event_key: "HRP", value_1: "42", grader_initials: "EL" },
-      { rn: "101", event_key: "SDC", value_1: "215", grader_initials: "EL" },
-      { rn: "101", event_key: "PLK", value_1: "322", grader_initials: "EL" },
-      { rn: "101", event_key: "2MR", value_1: "1732", grader_initials: "EL" },
+      { rn: "101", event_key: "MDL", value_1: "e.g. 300", value_2: "350", grader_initials: "GI" },
+      { rn: "101", event_key: "HRP", value_1: "e.g. 45", grader_initials: "GI" },
+      { rn: "101", event_key: "SDC", value_1: "e.g. 130", grader_initials: "GI" },
+      { rn: "101", event_key: "PLK", value_1: "e.g. 340", grader_initials: "GI" },
+      { rn: "101", event_key: "2MR", value_1: "e.g. 1430", grader_initials: "GI" },
     ]
   );
   const scored = safeCalculateRows(combined);
@@ -883,7 +880,7 @@ export default function App() {
       <div style={styles.shell}>
         <header style={styles.header}>
           <div>
-            <p style={styles.eyebrow}>WELCOME!</p>
+            <p style={styles.eyebrow}>BY EXAMPLE!</p>
             <h1 style={styles.title}>BLC AFT SCORING AUTOMATION SYSTEM</h1>
             <p style={styles.subtitle}>Please enter your grader initial, student RN, and records for each subject.</p>
           </div>
