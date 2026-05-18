@@ -579,14 +579,14 @@ export default function App() {
   const [rnInput, setRnInput] = useState("");
   const [adminSelectedRN, setAdminSelectedRN] = useState("");
   const [formValues, setFormValues] = useState({ value_1: "", value_2: "" });
+  const [formDirty, setFormDirty] = useState(false);
   const [message, setMessage] = useState(supabase ? "Connected to Supabase. Loading data." : "Missing Supabase environment variables. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
   const [busy, setBusy] = useState(false);
   const [syncing, setSyncing] = useState(false);
-  const [editing, setEditing] = useState(false);
   const [exportPreview, setExportPreview] = useState({ title: "", csv: "" });
   const mountedRef = useRef(false);
   const refreshTimerRef = useRef(null);
-  const editingTimerRef = useRef(null);
+  const previousFormKeyRef = useRef("");
   const loadSequenceRef = useRef(0);
 
   const combinedRows = useMemo(() => buildCombinedRows(rosterRows, eventRows), [rosterRows, eventRows]);
@@ -652,32 +652,43 @@ export default function App() {
     return () => {
       mountedRef.current = false;
       if (refreshTimerRef.current) window.clearTimeout(refreshTimerRef.current);
-      if (editingTimerRef.current) window.clearTimeout(editingTimerRef.current);
       supabase.removeChannel(channel);
     };
   }, []);
 
   useEffect(() => {
-    if (editing) return;
+  const activeFormKey = `${normalizeText(rnInput).toLowerCase()}|${selectedEventKey}`;
+  const formKeyChanged = previousFormKeyRef.current !== activeFormKey;
+
+  if (formKeyChanged) {
+    previousFormKeyRef.current = activeFormKey;
     setFormValues(readEventValuesFromRecord(selectedRecord, selectedEventKey));
-  }, [editing, rnInput, selectedEventKey, selectedRecord?.RN, selectedRecord?.LAST_UPDATED]);
-
-  useEffect(() => {
-    if (!scoredRows.length) {
-      if (adminSelectedRN) setAdminSelectedRN("");
-      return;
-    }
-    if (!adminSelectedRN || !scoredRows.some((row) => row.RN === adminSelectedRN)) {
-      setAdminSelectedRN(scoredRows[0].RN);
-    }
-  }, [scoredRows, adminSelectedRN]);
-
-  function updateFormValue(key, value) {
-    setEditing(true);
-    if (editingTimerRef.current) window.clearTimeout(editingTimerRef.current);
-    editingTimerRef.current = window.setTimeout(() => setEditing(false), 2500);
-    setFormValues((prev) => ({ ...prev, [key]: sanitizePerformanceValue(value) }));
+    setFormDirty(false);
+    return;
   }
+
+  // Important:
+  // Supabase live refreshes may update selectedRecord/LAST_UPDATED while a grader is typing.
+  // Do not overwrite the local draft once the grader has typed into the form.
+  if (!formDirty && selectedRecord) {
+    setFormValues(readEventValuesFromRecord(selectedRecord, selectedEventKey));
+  }
+}, [rnInput, selectedEventKey, selectedRecord?.RN]);
+
+useEffect(() => {
+  if (!scoredRows.length) {
+    if (adminSelectedRN) setAdminSelectedRN("");
+    return;
+  }
+  if (!adminSelectedRN || !scoredRows.some((row) => row.RN === adminSelectedRN)) {
+    setAdminSelectedRN(scoredRows[0].RN);
+  }
+}, [scoredRows, adminSelectedRN]);
+
+function updateFormValue(key, value) {
+  setFormDirty(true);
+  setFormValues((prev) => ({ ...prev, [key]: sanitizePerformanceValue(value) }));
+}
 
   function upsertLocalEventRecord(payload) {
     setEventRows((current) => {
@@ -774,7 +785,8 @@ export default function App() {
         setMessage(`${selectedEvent.key} saved to shared database for ${selectedRecord.RANK} ${selectedRecord.NAME}.`);
         await loadAllData({ silent: true });
       }
-      setEditing(false);
+      setFormDirty(false);
+      previousFormKeyRef.current = "";
       if (mountedRef.current) {
         setRnInput("");
         setFormValues({ value_1: "", value_2: "" });
@@ -933,16 +945,11 @@ export default function App() {
                       style={styles.bigInput}
                       value={formValues[field.key] || ""}
                       onChange={(e) => updateFormValue(field.key, e.target.value)}
-                      onFocus={() => setEditing(true)}
-                      onBlur={() => {
-                        if (editingTimerRef.current) window.clearTimeout(editingTimerRef.current);
-                        editingTimerRef.current = window.setTimeout(() => setEditing(false), 600);
-                      }}
                       placeholder={field.placeholder}
                       inputMode={field.inputMode}
-                    />
+                      />
                   </label>
-                ))}
+          ))}              
               </div>
               <button type="button" style={{ ...styles.primaryButton, ...(isDisabled ? styles.disabled : {}) }} disabled={isDisabled} onClick={submitEventRecord}>{isDisabled ? "Working..." : `Submit ${selectedEvent.key}`}</button>
             </section>
